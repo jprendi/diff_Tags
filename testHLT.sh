@@ -2,21 +2,22 @@
 
 # Read the file list, remove trailing commas, and join into a comma-separated string
 #FILEINPUT_TEMPLATE=$(tr -d '\r' < fileList.txt | tr '\n' ',' | sed 's/,$//')
+#FILEINPUT_TEMPLATE=$(awk 'NR % 40 == 0' fileList.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 FILEINPUT_TEMPLATE=$(awk 'NR % 6 == 0' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 
 
 hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
-   --globaltag 141X_dataRun3_Prompt_v3 \
+   --globaltag 141X_dataRun3_HLT_v2 \
    --data \
    --unprescale \
    --output minimal \
    --max-events -1 \
    --eras Run3_2024 --l1-emulator uGT --l1 L1Menu_Collisions2024_v1_3_0_xml \
    --input "$FILEINPUT_TEMPLATE" \
-   > hltData_Prompt_0.py
+   > hltData_HLT_0.py
 
 
-cat <<@EOF >> hltData_Prompt_0.py
+cat <<@EOF >> hltData_HLT_0.py
 
 ## put here the output commands of the 
 process.hltOutputMinimal.outputCommands = [
@@ -55,5 +56,5 @@ del process.MessageLogger
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
 @EOF
 
-cmsRun hltData_Prompt_0.py >& hltData_Prompt_0.log
-mv output.root output_Prompt_0.root 
+cmsRun hltData_HLT_0.py >& hltData_HLT_0.log
+mv output.root output_HLT_0.root 

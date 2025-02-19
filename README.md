@@ -9,6 +9,5 @@ git cms-addpkg DQM/Integration
 git cms-addpkg Configuration/StandardSequences
 git clone git@github.com:jprendi/diff_Tags.git 
 cd diff_Tags
-./prepareConfiguration.sh
+dasgoclient -query='file site=T2_CH_CERN dataset=/EGamma1/Run2024I-ZElectron-PromptReco-v1/RAW-RECO' >& fileList.txt  # this is to get all the available files
 ```
-Now this generates a general config file, but the file is to be adapted

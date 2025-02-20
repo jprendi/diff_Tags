@@ -1,23 +1,20 @@
 #!/bin/bash -ex
 
-# Read the file list, remove trailing commas, and join into a comma-separated string
-#FILEINPUT_TEMPLATE=$(tr -d '\r' < fileList.txt | tr '\n' ',' | sed 's/,$//')
-#FILEINPUT_TEMPLATE=$(awk 'NR % 40 == 0' fileList.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
-FILEINPUT_TEMPLATE=$(awk 'NR % 6 == 1' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
+for i in {0..0}; do
+    # Read the file list, remove trailing commas, and join into a comma-separated string
+    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 6 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 
+    hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
+       --globaltag 141X_dataRun3_HLT_v2 \
+       --data \
+       --unprescale \
+       --output minimal \
+       --max-events -1 \
+       --eras Run3_2024 --l1-emulator uGT --l1 L1Menu_Collisions2024_v1_3_0_xml \
+       --input "$FILEINPUT_TEMPLATE" \
+       > hltData_HLT_${i}.py
 
-hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
-   --globaltag 141X_dataRun3_HLT_v2 \
-   --data \
-   --unprescale \
-   --output minimal \
-   --max-events -1 \
-   --eras Run3_2024 --l1-emulator uGT --l1 L1Menu_Collisions2024_v1_3_0_xml \
-   --input "$FILEINPUT_TEMPLATE" \
-   > hltData_HLT_1.py
-
-
-cat <<@EOF >> hltData_HLT_1.py
+    cat <<@EOF >> hltData_HLT_${i}.py
 
 ## put here the output commands of the 
 process.hltOutputMinimal.outputCommands = [
@@ -49,12 +46,15 @@ process.hltOutputMinimal.outputCommands = [
 ]
 
 # set number of concurrent threads and events (CMSSW streams)
-process.options.numberOfThreads = 80
-process.options.numberOfStreams = 80
+process.options.numberOfThreads = 96
+process.options.numberOfStreams = 96
 
 del process.MessageLogger
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
 @EOF
 
-cmsRun hltData_HLT_1.py >& hltData_HLT_1.log
-mv output.root output_HLT_1.root 
+    cmsRun hltData_HLT_${i}.py >& hltData_HLT_${i}.log
+    mv output.root output_HLT_${i}.root
+
+done
+

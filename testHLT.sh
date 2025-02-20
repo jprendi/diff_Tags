@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 
-for i in {0..9}; do
+for i in {0..19}; do
     # Read the file list, remove trailing commas, and join into a comma-separated string
-    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 10 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
+    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 20 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 
     hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
        --globaltag 141X_dataRun3_HLT_v2 \
@@ -53,8 +53,8 @@ del process.MessageLogger
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
 @EOF
 
-    cmsRun hltData_HLT_${i}.py >& hltData_HLT_${i}.log
-    mv output.root output_HLT_${i}.root
+#    cmsRun hltData_HLT_${i}.py >& hltData_HLT_${i}.log
+#    mv output.root output_HLT_${i}.root
 
 done
 

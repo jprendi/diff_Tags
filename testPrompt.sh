@@ -1,8 +1,13 @@
 #!/bin/bash -ex
 
-for i in {0..9}; do
-    # Read the file list, remove trailing commas, and join into a comma-separated string
-    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 10 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
+
+# we loop over the files with a step of 20, s.t. the output file is not too big
+
+for i in {0..19}; do
+    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 20 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
+
+
+# downloads the trigger menu from confDB and creates a config python file
 
     hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
        --globaltag 141X_dataRun3_Prompt_v3 \
@@ -14,9 +19,10 @@ for i in {0..9}; do
        --input "$FILEINPUT_TEMPLATE" \
        > hltData_Prompt_${i}.py
 
+
+# this part defines which objects we want to keep (correlates w what DQM clients wants as an input)
     cat <<@EOF >> hltData_Prompt_${i}.py
 
-## put here the output commands of the 
 process.hltOutputMinimal.outputCommands = [
     'drop *',
     'keep *_hltDoubletRecoveryPFlowTrackSelectionHighPurity_*_*',
@@ -52,6 +58,8 @@ process.options.numberOfStreams = 96
 del process.MessageLogger
 process.load('FWCore.MessageLogger.MessageLogger_cfi')
 @EOF
+
+# running HLT with the config file we created above
 
     cmsRun hltData_Prompt_${i}.py >& hltData_Prompt_${i}.log
     mv output.root output_Prompt_${i}.root 

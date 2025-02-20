@@ -1,5 +1,6 @@
 # Running HLT using the prompt tag and assessing physics performance
-Basic scripts on running the HLT with the offline "prompt" tag to see how it affects physics performance. Here specifically using EGamma1 files and looking at the dielectron mass spectrum. In this case, make sure you have at least 500 GB of storage per HLT rerun and the specific files I extracted here. In total at least 1 TB. If you are running on your personal eos or plan to write the files there, make sure the files created are less than 50 GB at the time, as [eos doesn't allow this](https://cernbox.docs.cern.ch/web/quota/). But let's start in the beginning. I am using one of the openlab machines here with 96 CPUs.
+Basic scripts on running the HLT with the offline "prompt" tag to see how it affects physics performance. Here specifically using EGamma1 files and looking at the dielectron mass spectrum. In this case, make sure you have at least 500 GB of storage per HLT rerun for the specific files I extracted here. In total at least around 1 TB. To reduce this, one has to adapt the `process.hltOutputMinimsl.outputCommands` when running the HLT via `testPrompt.sh`. 
+ If you are running on your personal eos or plan to write the files there, make sure the files created are less than 50 GB at the time, as [eos doesn't allow this](https://cernbox.docs.cern.ch/web/quota/). But let's start in the beginning. I am using one of the openlab machines here with 96 CPUs.
 
 ## Rerunning the HLT and running it with the prompt tag
 We start by setting up our environment and getting all the files we need:
@@ -23,12 +24,11 @@ Now that we know on which files we want to rerun the HLT on, it's time to actual
 ```
 ./testHLT.sh
 ```
-This file loops over 10 partitions of the files. The reason for it is because otherwise the output files would be too large. For each iteration, a config file of the HLT is created and HLT is run. This will create the output files, that we later on want to assess. More comments can be found within the files itself that try to explain which part does what. 
-For running the HLT with a prompt tag, one can simply change the `--globaltag` and it suprisingly works. So you also run:
+This file loops over 10 partitions of the files. The reason for it is because otherwise the output files would be too large. For each iteration, a config file of the HLT is created and HLT is run. This will create the output files, that we later on want to assess. For running the HLT with a prompt tag, one can simply change the `--globaltag` and it suprisingly works. So you also run:
 ```
 ./testPrompt.sh
 ```
-After all of this ran, you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
+Small comments on what is being ran here can be found within the `testPrompt.sh' file. After all of this ran, you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
 
 ## Physics performance via DQM client
 Now that we have all the output files, we can process them with `hlt_dqm_sourceclient-live_cfg.py`. But unfortunately if we just run it like this, it will not actually run the with the new prompt tag but resort back to HLT decisions and the HLT tag. So we need to change the code in two places:
@@ -46,8 +46,7 @@ as this ensures that the Tag we chose actually gets used and not the HLT one. As
 GlobalTag.globaltag = '140X_dataRun3_Prompt_v4'
 ``` 
 
-For reference, I also uploaded the adapted file and they can be found within the `:w
-diff_Tags/src/diff_Tags/DQM_tools` directory!
+For reference, I also uploaded the above mentioned and adapted file and they can be found within the `diff_Tags/src/diff_Tags/DQM_tools` directory!
 Now we can run the DQM client with the Prompt Tag. Make sure you are in the `/src` folder and do the following:
 ```
 mkdir upload
@@ -56,6 +55,6 @@ mv diff_Tags/DQM_tools/*.sh .
 ``` 
 Now this takes very long! So maybe run it in `tmux`. :)
 
-Once this is done, you can find it in the `/upload` folder and plot it! *Make sure that if you want to run the DQM client with another output that was created with another tag to change it!!!!*
+Once this is done, you can find it in the `/upload` folder and plot it! **Make sure that if you want to run the DQM client with another output that was created with another tag to change it!!!!**
 
 

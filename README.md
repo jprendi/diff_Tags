@@ -31,7 +31,7 @@ For running the HLT with a prompt tag, one can simply change the `--globaltag` a
 After all of this ran, you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
 
 ## Physics performance via DQM client
-Now that we have all the output files, we can process them with `hlt_dqm_sourceclient-live_cfg.py`. But unfortunately if we just run it like this, it will not actually run the with the new tag but resort back to HLT decisions and the HLT tag. So we need to change the code in two places:
+Now that we have all the output files, we can process them with `hlt_dqm_sourceclient-live_cfg.py`. But unfortunately if we just run it like this, it will not actually run the with the new prompt tag but resort back to HLT decisions and the HLT tag. So we need to change the code in two places:
 1. `DQM/Integration/python/clients/hlt_dqm_sourceclient-live_cfg.py`
 2. `DQM/Integration/python/config/FrontierCondition_GT_cfi.py`
 
@@ -46,5 +46,16 @@ as this ensures that the Tag we chose actually gets used and not the HLT one. As
 GlobalTag.globaltag = '140X_dataRun3_Prompt_v4'
 ``` 
 
- 
+For reference, I also uploaded the adapted file and they can be found within the `:w
+diff_Tags/src/diff_Tags/DQM_tools` directory!
+Now we can run the DQM client with the Prompt Tag. Make sure you are in the `/src` folder and do the following:
+```
+mkdir upload
+mv diff_Tags/DQM_tools/*.sh .
+./run_DQMclient_Prompt.sh
+``` 
+Now this takes very long! So maybe run it in `tmux`. :)
+
+Once this is done, you can find it in the `/upload` folder and plot it!! :)
+
 

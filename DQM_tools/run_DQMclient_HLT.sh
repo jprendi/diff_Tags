@@ -1,6 +1,11 @@
 #!/bin/bash -ex
 
-INPUT_FILES=$(find diff_Tags -type f -name '/eos/user/j/jprendi/test_out/output_HLT*.root' | paste -sd, -)
 
-# Run the cmsRun command with the constructed inputFiles list
+
+EOS_DIR="/eos/user/j/jprendi/test_out"
+
+# List files matching the pattern and construct the inputFiles argument
+INPUT_FILES=$(ls "$EOS_DIR"/output_HLT_*.root | awk '{print "file:"$0}' | paste -sd, -)
+
+
 cmsRun DQM/Integration/python/clients/hlt_dqm_sourceclient-live_cfg.py inputFiles=$INPUT_FILES >& dqmclient_HLT.log

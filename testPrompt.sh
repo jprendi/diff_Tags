@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 
-for i in {5..5}; do
+for i in {0..9}; do
     # Read the file list, remove trailing commas, and join into a comma-separated string
-    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 6 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
+    FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 10 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 
     hltGetConfiguration /dev/CMSSW_14_1_0/GRun \
        --globaltag 141X_dataRun3_Prompt_v3 \

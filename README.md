@@ -19,4 +19,14 @@ voms-proxy-init --voms cms --valid 168:00
 dasgoclient -query='file site=T2_CH_CERN dataset=/EGamma1/Run2024I-ZElectron-PromptReco-v1/RAW-RECO' >& fileList.txt 
 grep '/000/386/509/' fileList.txt > fileList_509.tx
 ```
+Now that we know on which files we want to rerun the HLT on, it's time to actually run the HLT and we start with simply rerunning the HLT. For this, we run
+```
+./testHLT.sh
+```
+This file loops over 10 partitions of the files. The reason for it is because otherwise the output files would be too large. For each iteration, a config file of the HLT is created and HLT is run. This will create the output files, that we later on want to assess. For running the HLT with a prompt tag, one can simply change the `--globaltag` and it suprisingly works. So you also run:
+```
+./testPrompt.sh
+```
+After all of this ran (~5-6 hours), you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
+
 

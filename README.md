@@ -23,10 +23,28 @@ Now that we know on which files we want to rerun the HLT on, it's time to actual
 ```
 ./testHLT.sh
 ```
-This file loops over 10 partitions of the files. The reason for it is because otherwise the output files would be too large. For each iteration, a config file of the HLT is created and HLT is run. This will create the output files, that we later on want to assess. For running the HLT with a prompt tag, one can simply change the `--globaltag` and it suprisingly works. So you also run:
+This file loops over 10 partitions of the files. The reason for it is because otherwise the output files would be too large. For each iteration, a config file of the HLT is created and HLT is run. This will create the output files, that we later on want to assess. More comments can be found within the files itself that try to explain which part does what. 
+For running the HLT with a prompt tag, one can simply change the `--globaltag` and it suprisingly works. So you also run:
 ```
 ./testPrompt.sh
 ```
-After all of this ran (~5-6 hours), you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
+After all of this ran, you will have many output files that are now to be analyzed through the DQM HLT sourceclient.
 
+## Physics performance via DQM client
+Now that we have all the output files, we can process them with `hlt_dqm_sourceclient-live_cfg.py`. But unfortunately if we just run it like this, it will not actually run the with the new tag but resort back to HLT decisions and the HLT tag. So we need to change the code in two places:
+1. `DQM/Integration/python/clients/hlt_dqm_sourceclient-live_cfg.py`
+2. `DQM/Integration/python/config/FrontierCondition_GT_cfi.py`
+
+
+Within the first file, we need to add two lines to the file, right before the last line, namely:
+```
+process.hltObjectsMonitor4all.processName  = cms.string("HLTX")
+process.hltObjectMonitor.processName = cms.string("HLTX")
+```
+as this ensures that the Tag we chose actually gets used and not the HLT one. As for the second file,upon opening one sees in the fourth line `GlobalTag.globaltag = autoCond['run3_hlt']`. This also has to be changed, as it will take the hlt tag. So you have to change it to whatever tag you need it to be:
+```
+GlobalTag.globaltag = '140X_dataRun3_Prompt_v4'
+``` 
+
+ 
 

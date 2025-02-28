@@ -58,3 +58,8 @@ Now this takes very long! So maybe run it in `tmux`. :)
 Once this is done, you can find it in the `/upload` folder and plot it! **Make sure that if you want to run the DQM client with another output that was created with another tag to change it!!!!**
 
 
+
+
+#Resources
+These scripts are heavily based on the following [Getting and Running the HLT](https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT).
+

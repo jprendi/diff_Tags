@@ -9,6 +9,7 @@ scram project -n diff_Tags CMSSW_14_2_2
 cd diff_Tags/src
 cmsenv
 git cms-addpkg DQM/Integration
+git cms-addpkg DQM/HLTEvF
 git cms-addpkg Configuration/StandardSequences
 scram b -j 96
 git clone git@github.com:jprendi/diff_Tags.git
@@ -57,7 +58,19 @@ Now this takes very long! So maybe run it in `tmux`. :)
 
 Once this is done, you can find it in the `/upload` folder and plot it! **Make sure that if you want to run the DQM client with another output that was created with another tag to change it!!!!**
 
+The default setting is for the histograms to have a bin size of 50. If you want to change it any other bin size, one has to change it in the following file:
+```
+vim diff_Tags/src/DQM/HLTEvF/python/HLTObjectMonitor_cfi.py
+```
+In my case, I am interested in the dielectron mass, so we search for `diElecMass`in the file and set `NbinsX = cms.int32(100)`.
 
+In the `upload` directory, we can find the DQM root files from which we can plot from. I made a small script to get the invariant dielectron mass spectrum of the two different tags:
+```
+mv diff_Tags/DQM_tools/plot.C upload/
+root
+.x plot.C
+```
+The plot could look something like this: ![Di-Electron Mass Plot](https://raw.githubusercontent.com/jprendi/diff_Tags/main/di-Electron_Mass.png).
 
 
 #Resources

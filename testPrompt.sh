@@ -51,6 +51,8 @@ process.hltOutputMinimal.outputCommands = [
     'keep triggerTriggerEvent_*_*_HLTX' 
 ]
 
+process.hltOnlineBeamSpotESProducer.timeThreshold = 0
+
 # set number of concurrent threads and events (CMSSW streams)
 process.options.numberOfThreads = 96
 process.options.numberOfStreams = 96

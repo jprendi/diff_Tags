@@ -73,6 +73,6 @@ root
 The plot could look something like this: ![Di-Electron Mass Plot](https://raw.githubusercontent.com/jprendi/diff_Tags/main/di-Electron_Mass.png).
 
 
-#Resources
-These scripts are heavily based on the following [Getting and Running the HLT](https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT).
+# Resources
+These scripts are heavily based on the following [Getting and Running the HLT](https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT) and  [Marco's repo](https://github.com/mmusich/NGT-Task-3.4).
 

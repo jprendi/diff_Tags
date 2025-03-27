@@ -3,7 +3,7 @@
 
 # we loop over the files with a step of 20, s.t. the output file is not too big
 
-for i in {0..19}; do
+for i in {8..8}; do
     FILEINPUT_TEMPLATE=$(awk -v iter="$i" 'NR % 20 == iter' fileList_509.txt | tr -d '\r' | tr '\n' ',' | sed 's/,$//')
 
 
@@ -17,11 +17,15 @@ for i in {0..19}; do
        --max-events -1 \
        --eras Run3_2024 --l1-emulator uGT --l1 L1Menu_Collisions2024_v1_3_0_xml \
        --input "$FILEINPUT_TEMPLATE" \
-       > hltData_Prompt_${i}.py
+       > hltData_Prompt_${i}_BS.py
 
 
 # this part defines which objects we want to keep (correlates w what DQM clients wants as an input)
-    cat <<@EOF >> hltData_Prompt_${i}.py
+    cat <<@EOF >> hltData_Prompt_${i}_BS.py
+
+process.hltOutputMinimal.fileName = cms.untracked.string( "/eos/user/j/jprendi/test_out/BS/output_HLT_${i}_BS.root" )
+
+process.dqmOutput.fileName = cms.untracked.string("/eos/user/j/jprendi/test_out/BS/DQMIO_${i}_BS.root")
 
 process.hltOutputMinimal.outputCommands = [
     'drop *',
@@ -63,8 +67,7 @@ process.load('FWCore.MessageLogger.MessageLogger_cfi')
 
 # running HLT with the config file we created above
 
-    cmsRun hltData_Prompt_${i}.py >& hltData_Prompt_${i}.log
-    mv output.root output_Prompt_${i}.root 
+    cmsRun hltData_Prompt_${i}_BS.py >& hltData_Prompt_${i}_BS.log
 
 done
 
